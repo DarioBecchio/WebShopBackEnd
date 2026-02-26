@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
-
+use App\Http\Controllers\Auth\ApiAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,8 +15,13 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route pubbliche
+Route::post('login', [ApiAuthController::class, 'login']);
+Route::get('posts/published', [PostController::class, 'published']);
+Route::get('posts/{post}', [PostController::class, 'show']);
 
-Route::apiResource('posts', PostController::class);
+// Route protette
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [ApiAuthController::class, 'logout']);
+    Route::apiResource('posts', PostController::class)->except(['show']);
+});
