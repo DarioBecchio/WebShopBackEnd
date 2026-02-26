@@ -2,63 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Lista tutti i post
     public function index()
     {
-        //
+        $posts = Post::latest()->paginate(10);
+        return response()->json($posts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mostra solo i post pubblicati (per la homepage)
+    public function published()
     {
-        //
+        $posts = Post::published()
+            ->latest('published_at')
+            ->paginate(6);
+
+        return response()->json($posts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crea un nuovo post
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title'    => 'required|string|max:255',
+            'content'  => 'required|string',
+            'image'    => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'status'   => 'in:draft,published',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['title']);
+        $validated['user_id'] = auth()->id();
+
+        if (isset($validated['status']) && $validated['status'] === 'published') {
+            $validated['published_at'] = now();
+        }
+
+        $post = Post::create($validated);
+
+        return response()->json($post, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Mostra un singolo post
+    public function show(Post $post)
     {
-        //
+        return response()->json($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Aggiorna un post
+    public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'title'    => 'sometimes|string|max:255',
+            'content'  => 'sometimes|string',
+            'image'    => 'nullable|string',
+            'category' => 'nullable|string|max:100',
+            'status'   => 'in:draft,published',
+        ]);
+
+        if (isset($validated['title'])) {
+            $validated['slug'] = Str::slug($validated['title']);
+        }
+
+        if (isset($validated['status']) && $validated['status'] === 'published' && !$post->published_at) {
+            $validated['published_at'] = now();
+        }
+
+        $post->update($validated);
+
+        return response()->json($post);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Elimina un post
+    public function destroy(Post $post)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $post->delete();
+        return response()->json(['message' => 'Post eliminato con successo']);
     }
 }
