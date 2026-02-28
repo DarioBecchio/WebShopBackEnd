@@ -1,77 +1,46 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Post;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
-class PostController extends Controller
+class Post extends Model
 {
-    // Lista tutti i post
-    public function index()
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'slug',
+        'content',
+        'image',
+        'category',
+        'status',
+        'published_at',
+        'user_id',
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
+
+    protected static function boot()
     {
-        $posts = Post::latest()->paginate(10);
-        return response()->json($posts);
+        parent::boot();
+
+        static::creating(function ($post) {
+            $post->slug = Str::slug($post->title);
+        });
     }
 
-    // Crea un nuovo post
-    public function store(Request $request)
+    public function user()
     {
-        $validated = $request->validate([
-            'title'    => 'required|string|max:255',
-            'content'  => 'required|string',
-            'image'    => 'nullable|string',
-            'category' => 'nullable|string|max:100',
-            'status'   => 'in:draft,published',
-        ]);
-
-        $validated['slug'] = Str::slug($validated['title']);
-        $validated['user_id'] = auth()->id();
-
-        if ($validated['status'] === 'published') {
-            $validated['published_at'] = now();
-        }
-
-        $post = Post::create($validated);
-
-        return response()->json($post, 201);
+        return $this->belongsTo(User::class);
     }
 
-    // Mostra un singolo post
-    public function show(Post $post)
+    public function scopePublished($query)
     {
-        return response()->json($post);
-    }
-
-    // Aggiorna un post
-    public function update(Request $request, Post $post)
-    {
-        $validated = $request->validate([
-            'title'    => 'sometimes|string|max:255',
-            'content'  => 'sometimes|string',
-            'image'    => 'nullable|string',
-            'category' => 'nullable|string|max:100',
-            'status'   => 'in:draft,published',
-        ]);
-
-        if (isset($validated['title'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
-
-        if (isset($validated['status']) && $validated['status'] === 'published' && !$post->published_at) {
-            $validated['published_at'] = now();
-        }
-
-        $post->update($validated);
-
-        return response()->json($post);
-    }
-
-    // Elimina un post
-    public function destroy(Post $post)
-    {
-        $post->delete();
-        return response()->json(['message' => 'Post eliminato con successo']);
+        return $query->where('status', 'published');
     }
 }
