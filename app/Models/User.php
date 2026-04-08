@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'role',
         'email',
         'password',
         'phone',
@@ -52,4 +53,14 @@ class User extends Authenticatable
         'newsletter'        => 'boolean',
         'password' => 'hashed',
     ];
+    // Relazione con i post (se l'utente è admin)
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function isAdmin(): bool
+{
+    return $this->role === 'admin';
+}
 }

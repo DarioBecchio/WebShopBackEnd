@@ -2,34 +2,27 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\PostController;
+use App\Http\Controllers\Frontend\ProfileController as FrontendProfileController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
+// Dashboard admin (protetta da isAdmin)
+Route::middleware(['auth', 'verified', 'isAdmin'])->prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('home');
     Route::resource('posts', PostController::class);
+    Route::get('users', [\App\Http\Controllers\Dashboard\UserController::class, 'index'])->name('users.index');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+// Profilo utente frontend (per i clienti)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile', [FrontendProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [FrontendProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [FrontendProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
