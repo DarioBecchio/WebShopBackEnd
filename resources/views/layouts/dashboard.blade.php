@@ -10,7 +10,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('dashboard') }}">Mortadicipria</a>
+        <a class="navbar-brand" href="{{ route('dashboard.home') }}">Mortadicipria</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
