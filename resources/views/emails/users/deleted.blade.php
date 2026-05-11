@@ -1,12 +1,16 @@
 <x-mail::message>
-# Introduction
+# Ci dispiace vederti andare, {{ $user->name }}
 
-The body of your message.
+Il tuo account su **{{ config('app.name') }}** è stato eliminato con successo.
 
-<x-mail::button :url="''">
-Button Text
+Tutti i tuoi dati personali sono stati rimossi dai nostri sistemi.
+
+Se hai eliminato l account per errore o hai cambiato idea, puoi registrarti nuovamente in qualsiasi momento.
+
+<x-mail::button :url="url('/register')">
+Registrati di nuovo
 </x-mail::button>
 
-Thanks,<br>
+Grazie per aver fatto parte di {{ config('app.name') }}.<br>
 {{ config('app.name') }}
 </x-mail::message>

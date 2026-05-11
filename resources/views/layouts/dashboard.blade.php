@@ -28,6 +28,10 @@
                         <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.email.*') ? 'active' : '' }}"
+                     href="{{ route('dashboard.email.index') }}">Email</a>
+                </li>
             </ul>
         </div>
     </div>
