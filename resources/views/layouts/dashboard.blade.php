@@ -17,6 +17,19 @@
                     <a class="nav-link {{ request()->routeIs('dashboard.posts.*') ? 'active' : '' }}" 
                        href="{{ route('dashboard.posts.index') }}">Post</a>
                 </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.email.*') ? 'active' : '' }}"
+                     href="{{ route('dashboard.email.index') }}">Email</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.orders.*') ? 'active' : '' }}"
+                    href="{{ route('dashboard.orders.index') }}">Ordini</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.returns.*') ? 'active' : '' }}"
+                    href="{{ route('dashboard.returns.index') }}">Resi</a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -27,15 +40,7 @@
                         @csrf
                         <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                     </form>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('dashboard.email.*') ? 'active' : '' }}"
-                     href="{{ route('dashboard.email.index') }}">Email</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('dashboard.orders.*') ? 'active' : '' }}"
-                    href="{{ route('dashboard.orders.index') }}">Ordini</a>
-                </li>
+                </li>                
             </ul>
         </div>
     </div>
