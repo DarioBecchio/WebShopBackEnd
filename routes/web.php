@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\EmailController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Dashboard\ReturnRequestController;
 use App\Http\Controllers\Frontend\ProfileController as FrontendProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::middleware(['auth', 'isAdmin'])->prefix('dashboard')->name('dashboard.')-
     });
 
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
+
+    Route::resource('returns', ReturnRequestController::class)
+    ->only(['index', 'show', 'update'])
+    ->parameters(['returns' => 'returnRequest']);
 });
 
 // Profilo utente frontend (per i clienti, con verified)
