@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\EmailController;
+use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Frontend\ProfileController as FrontendProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::middleware(['auth', 'isAdmin'])->prefix('dashboard')->name('dashboard.')-
         Route::get('/logs',        [EmailController::class, 'logs'])           ->name('logs');
         Route::get('/templates',   [EmailController::class, 'templates'])      ->name('templates');
     });
+
+    Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
 });
 
 // Profilo utente frontend (per i clienti, con verified)
