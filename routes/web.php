@@ -5,6 +5,8 @@ use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\EmailController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ReturnRequestController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
 use App\Http\Controllers\Frontend\ProfileController as FrontendProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('dashboard')->name('dashboard.')-
     })->name('home');
 
     Route::resource('posts', PostController::class);
+
+    Route::resource('contacts', DashboardContactController::class)
+    ->only(['index', 'show', 'update']);
 
     Route::get('users', [\App\Http\Controllers\Dashboard\UserController::class, 'index'])
         ->name('users.index');
@@ -45,6 +50,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/contatti', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contatti', [ContactController::class, 'store'])->name('contact.store');
 });
 
 require __DIR__.'/auth.php';
