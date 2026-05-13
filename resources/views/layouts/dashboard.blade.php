@@ -30,6 +30,15 @@
                     <a class="nav-link {{ request()->routeIs('dashboard.returns.*') ? 'active' : '' }}"
                     href="{{ route('dashboard.returns.index') }}">Resi</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('dashboard.contacts.*') ? 'active' : '' }}"
+                    href="{{ route('dashboard.contacts.index') }}">
+                        Messaggi
+                        @if(\App\Models\ContactMessage::new()->count() > 0)
+                            <span class="badge bg-danger">{{ \App\Models\ContactMessage::new()->count() }}</span>
+                        @endif
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
