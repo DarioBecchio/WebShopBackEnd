@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Finish extends Model
 {
-    use HasFactory;
+    protected $fillable = ['code', 'label'];
+
+    public function shades()
+    {
+        return $this->hasMany(Shade::class);
+    }
 }

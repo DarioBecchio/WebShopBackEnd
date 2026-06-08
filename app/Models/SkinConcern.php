@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SkinConcern extends Model
 {
-    use HasFactory;
+    protected $fillable = ['code', 'label', 'description'];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_skin_concerns');
+    }
 }
