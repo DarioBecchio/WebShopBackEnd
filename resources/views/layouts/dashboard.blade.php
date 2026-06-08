@@ -49,8 +49,8 @@
                         request()->routeIs('shades.*') || 
                         request()->routeIs('claims.*') || 
                         request()->routeIs('certifications.*') ? 'active' : '' 
-                    }}" href="{{ route('brands.index') }}">
-                        💄 Cosmetici
+                    }}" href="dashboard.brands.index ">
+                        Cosmetici
                     </a>
                 </li>
             </ul>
