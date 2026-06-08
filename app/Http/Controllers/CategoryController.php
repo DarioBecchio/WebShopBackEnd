@@ -2,63 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $categories = Category::with('parent')
+            ->when($request->search, fn($q,$s) => $q->where('name','like',"%$s%"))
+            ->orderBy('depth')->orderBy('name')
+            ->paginate(25)->withQueryString();
+
+        return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $parents = Category::orderBy('name')->pluck('name','id');
+        return view('categories.form', ['category' => new Category, 'parents' => $parents]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name'      => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:categories,id',
+        ]);
+        $data['slug']  = Str::slug($data['name'].'-'.time());
+        $data['depth'] = $data['parent_id']
+            ? Category::find($data['parent_id'])->depth + 1
+            : 0;
+        Category::create($data);
+
+        return redirect()->route('categories.index')->with('success','Categoria creata.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Category $category)
     {
-        //
+        $parents = Category::where('id','!=',$category->id)->orderBy('name')->pluck('name','id');
+        return view('categories.form', compact('category','parents'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $data = $request->validate([
+            'name'      => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:categories,id',
+        ]);
+        $data['depth'] = $data['parent_id']
+            ? Category::find($data['parent_id'])->depth + 1
+            : 0;
+        $category->update($data);
+
+        return redirect()->route('categories.index')->with('success','Categoria aggiornata.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Category $category)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $category->delete();
+        return redirect()->route('categories.index')->with('success','Categoria eliminata.');
     }
 }

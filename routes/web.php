@@ -37,39 +37,39 @@ Route::middleware(['auth', 'isAdmin'])->prefix('dashboard')->name('dashboard.')-
         ->name('users.index');
 
     // Email management dentro la dashboard
-    Route::prefix('email')->name('email.')->group(function () {
-        Route::get('/',            [EmailController::class, 'index'])          ->name('index');
-        Route::get('/newsletter',  [EmailController::class, 'newsletter'])     ->name('newsletter');
-        Route::post('/newsletter', [EmailController::class, 'sendNewsletter']) ->name('newsletter.send');
-        Route::get('/logs',        [EmailController::class, 'logs'])           ->name('logs');
-        Route::get('/templates',   [EmailController::class, 'templates'])      ->name('templates');
+        Route::prefix('email')->name('email.')->group(function () {
+            Route::get('/',            [EmailController::class, 'index'])          ->name('index');
+            Route::get('/newsletter',  [EmailController::class, 'newsletter'])     ->name('newsletter');
+            Route::post('/newsletter', [EmailController::class, 'sendNewsletter']) ->name('newsletter.send');
+            Route::get('/logs',        [EmailController::class, 'logs'])           ->name('logs');
+            Route::get('/templates',   [EmailController::class, 'templates'])      ->name('templates');
     });
 
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
 
     Route::resource('returns', ReturnRequestController::class)
-    ->only(['index', 'show', 'update'])
-    ->parameters(['returns' => 'returnRequest']);
+        ->only(['index', 'show', 'update'])
+        ->parameters(['returns' => 'returnRequest']);
 
-    Route::resource('brands',         BrandController::class);
-Route::resource('categories',     CategoryController::class);
-Route::resource('products',       ProductController::class);
-Route::resource('variants',       ProductVariantController::class);
-Route::resource('ingredients',    IngredientController::class);
-Route::resource('shades',         ShadeController::class);
-Route::resource('claims',         ClaimController::class);
-Route::resource('certifications', CertificationController::class);
+        Route::resource('brands',         BrandController::class);
+        Route::resource('categories',     CategoryController::class);
+        Route::resource('products',       ProductController::class);
+        Route::resource('variants',       ProductVariantController::class);
+        Route::resource('ingredients',    IngredientController::class);
+        Route::resource('shades',         ShadeController::class);
+        Route::resource('claims',         ClaimController::class);
+        Route::resource('certifications', CertificationController::class);
 
 });
 
 // Profilo utente frontend (per i clienti, con verified)
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/contatti', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contatti', [ContactController::class, 'store'])->name('contact.store');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/contatti', [ContactController::class, 'index'])->name('contact.index');
+        Route::post('/contatti', [ContactController::class, 'store'])->name('contact.store');
 });
 
 require __DIR__.'/auth.php';

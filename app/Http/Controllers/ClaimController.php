@@ -2,63 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Claim;
 use Illuminate\Http\Request;
 
 class ClaimController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $claims = Claim::when($request->search, fn($q,$s) => $q->where('label','like',"%$s%"))
+            ->orderBy('label')->paginate(25)->withQueryString();
+
+        return view('claims.index', compact('claims'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('claims.form', ['claim' => new Claim]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Claim::create($request->validate([
+            'code'     => 'required|string|max:64|unique:claims',
+            'label'    => 'required|string|max:255',
+            'category' => 'nullable|string|max:32',
+        ]));
+        return redirect()->route('claims.index')->with('success','Claim creato.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Claim $claim)
     {
-        //
+        return view('claims.form', compact('claim'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Claim $claim)
     {
-        //
+        $claim->update($request->validate([
+            'code'     => 'required|string|max:64|unique:claims,code,'.$claim->id,
+            'label'    => 'required|string|max:255',
+            'category' => 'nullable|string|max:32',
+        ]));
+        return redirect()->route('claims.index')->with('success','Claim aggiornato.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Claim $claim)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $claim->delete();
+        return redirect()->route('claims.index')->with('success','Claim eliminato.');
     }
 }

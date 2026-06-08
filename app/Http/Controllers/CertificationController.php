@@ -2,63 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certification;
 use Illuminate\Http\Request;
 
 class CertificationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $certifications = Certification::when($request->search, fn($q,$s) => $q->where('name','like',"%$s%"))
+            ->orderBy('name')->paginate(25)->withQueryString();
+
+        return view('certifications.index', compact('certifications'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('certifications.form', ['certification' => new Certification]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Certification::create($request->validate([
+            'code'         => 'required|string|max:32|unique:certifications',
+            'name'         => 'required|string|max:255',
+            'issuing_body' => 'nullable|string|max:255',
+            'logo_url'     => 'nullable|url',
+        ]));
+        return redirect()->route('certifications.index')->with('success','Certificazione creata.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Certification $certification)
     {
-        //
+        return view('certifications.form', compact('certification'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Certification $certification)
     {
-        //
+        $certification->update($request->validate([
+            'code'         => 'required|string|max:32|unique:certifications,code,'.$certification->id,
+            'name'         => 'required|string|max:255',
+            'issuing_body' => 'nullable|string|max:255',
+            'logo_url'     => 'nullable|url',
+        ]));
+        return redirect()->route('certifications.index')->with('success','Certificazione aggiornata.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Certification $certification)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $certification->delete();
+        return redirect()->route('certifications.index')->with('success','Certificazione eliminata.');
     }
 }
