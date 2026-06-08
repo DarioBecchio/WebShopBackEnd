@@ -39,6 +39,20 @@
                         @endif
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 
+                        request()->routeIs('brands.*') || 
+                        request()->routeIs('products.*') || 
+                        request()->routeIs('variants.*') || 
+                        request()->routeIs('ingredients.*') || 
+                        request()->routeIs('categories.*') || 
+                        request()->routeIs('shades.*') || 
+                        request()->routeIs('claims.*') || 
+                        request()->routeIs('certifications.*') ? 'active' : '' 
+                    }}" href="{{ route('brands.index') }}">
+                        💄 Cosmetici
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">

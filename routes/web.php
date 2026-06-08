@@ -9,6 +9,14 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
 use App\Http\Controllers\Frontend\ProfileController as FrontendProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariantController;
+use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\ShadeController;
+use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\CertificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +50,16 @@ Route::middleware(['auth', 'isAdmin'])->prefix('dashboard')->name('dashboard.')-
     Route::resource('returns', ReturnRequestController::class)
     ->only(['index', 'show', 'update'])
     ->parameters(['returns' => 'returnRequest']);
+
+    Route::resource('brands',         BrandController::class);
+Route::resource('categories',     CategoryController::class);
+Route::resource('products',       ProductController::class);
+Route::resource('variants',       ProductVariantController::class);
+Route::resource('ingredients',    IngredientController::class);
+Route::resource('shades',         ShadeController::class);
+Route::resource('claims',         ClaimController::class);
+Route::resource('certifications', CertificationController::class);
+
 });
 
 // Profilo utente frontend (per i clienti, con verified)
