@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SizeSeeder::class,
             ClaimSeeder::class,
             CertificationSeeder::class,
+            IngredientSeeder::class,
         ]);
     }
 }

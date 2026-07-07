@@ -9,10 +9,17 @@ class SkinTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        $types = ['Normale', 'Secca', 'Grassa', 'Mista', 'Sensibile'];
+        $types = [
+            ['code' => 'normal', 'label' => 'Normale'],
+            ['code' => 'dry', 'label' => 'Secca'],
+            ['code' => 'oily', 'label' => 'Grassa'],
+            ['code' => 'combination', 'label' => 'Mista'],
+            ['code' => 'sensitive', 'label' => 'Sensibile'],
+            ['code' => 'all', 'label' => 'Tutti i tipi di pelle'],
+        ];
 
         foreach ($types as $type) {
-            SkinType::create(['name' => $type]);
+            SkinType::create($type);
         }
     }
 }

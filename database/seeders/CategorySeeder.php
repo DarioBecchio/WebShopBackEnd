@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use App\Models\Category;
 
 class CategorySeeder extends Seeder
@@ -17,11 +18,15 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($tree as $parentName => $children) {
-            $parent = Category::create(['name' => $parentName]);
+            $parent = Category::create([
+                'name' => $parentName,
+                'slug' => Str::slug($parentName),
+            ]);
 
             foreach ($children as $childName) {
                 Category::create([
                     'name' => $childName,
+                    'slug' => Str::slug($childName),
                     'parent_id' => $parent->id,
                 ]);
             }

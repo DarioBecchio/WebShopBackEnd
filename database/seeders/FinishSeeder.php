@@ -9,10 +9,18 @@ class FinishSeeder extends Seeder
 {
     public function run(): void
     {
-        $finishes = ['Opaco', 'Satinato', 'Lucido', 'Metallico', 'Naturale', 'Effetto velo'];
+        $finishes = [
+            ['code' => 'matte', 'label' => 'Opaco'],
+            ['code' => 'satin', 'label' => 'Satinato'],
+            ['code' => 'dewy', 'label' => 'Luminoso / Dewy'],
+            ['code' => 'glossy', 'label' => 'Lucido'],
+            ['code' => 'metallic', 'label' => 'Metallico'],
+            ['code' => 'natural', 'label' => 'Naturale'],
+            ['code' => 'veil', 'label' => 'Effetto velo'],
+        ];
 
         foreach ($finishes as $finish) {
-            Finish::create(['name' => $finish]);
+            Finish::create($finish);
         }
     }
 }
