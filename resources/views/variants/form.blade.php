@@ -146,4 +146,54 @@
 </div>
 
 </form>
+
+@if(isset($variant) && $variant->exists)
+<div class="card mt-4">
+    <div class="card-header">
+        <strong>Immagini della variante</strong>
+    </div>
+    <div class="card-body">
+
+        <div class="row mb-4">
+            @forelse($variant->media as $item)
+                <div class="col-md-2 col-sm-3 col-4 mb-3 text-center">
+                    <img src="{{ $item->url }}" alt="{{ $item->alt_text }}"
+                         class="img-thumbnail" style="height: 100px; object-fit: cover;">
+                    <form action="{{ route('media.destroy', $item) }}" method="POST" class="mt-1">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Eliminare questa immagine?')">
+                            Elimina
+                        </button>
+                    </form>
+                </div>
+            @empty
+                <div class="col-12">
+                    <p class="text-muted">Nessuna immagine caricata per questa variante.</p>
+                </div>
+            @endforelse
+        </div>
+
+        <form action="{{ route('media.store', $variant) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-3">
+                <label for="images" class="form-label">Carica nuove immagini</label>
+                <input type="file" name="images[]" id="images" class="form-control" multiple accept="image/*" required>
+                <div class="form-text">Formati ammessi: JPG, PNG, WEBP. Max 4MB per file.</div>
+                @error('images.*')
+                    <div class="text-danger small">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="alt_text" class="form-label">Testo alternativo (opzionale)</label>
+                <input type="text" name="alt_text" id="alt_text" class="form-control"
+                       placeholder="Es. Rossetto Mocha Rose - vista frontale">
+            </div>
+            <button type="submit" class="btn btn-primary">Carica immagini</button>
+        </form>
+
+    </div>
+</div>
+@endif
 @endsection

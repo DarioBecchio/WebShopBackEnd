@@ -50,4 +50,4 @@ class ProductVariant extends Model
     {
         return $this->hasOne(Packaging::class, 'variant_id');
     }
-}
+}    

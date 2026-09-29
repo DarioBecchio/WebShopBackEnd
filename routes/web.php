@@ -16,6 +16,7 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ShadeController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\CertificationController;
+use App\Http\Controllers\MediaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -60,6 +61,9 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::resource('shades',         ShadeController::class);
     Route::resource('claims',         ClaimController::class);
     Route::resource('certifications', CertificationController::class);
+    Route::post('/variants/{variant}/media', [MediaController::class, 'store'])->name('media.store');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+    Route::post('/media/reorder', [MediaController::class, 'reorder'])->name('media.reorder');
 });
 
 // ── Profilo utente frontend ───────────────────────────────────────────────────
